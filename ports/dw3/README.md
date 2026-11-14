@@ -34,20 +34,19 @@ How the launcher chooses:
   `settings.json` yet. Everywhere else the default is software.
 - `DW3_FORCE_VIDEO` (`fbdev` or `sdl2`) and `DW3_FORCE_RENDERER` (`gles` or `software`) override both choices.
 
-More: [running, deploying and limits](https://github.com/al4xdev/dw3/blob/main/docs/HANDHELD.md).
+More: [running, deploying and limits](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/HANDHELD.md).
 
 ## What the menu offers
 
 The menu runs before the game, is driven by the pad alone and writes `ports/dw3/settings.json` as you change it.
 `Cross` enters a group or changes a value, `Circle` goes back, `Start` plays from anywhere, `Select + Start` quits. The
 defaults are the setup the port was tuned with, so a player who never opens the menu gets it anyway: 8x fast-forward
-with the audio muted, the whole party sharing all the experience, XP boost 2x, form XP 14x, and the evolution buff on
-(the first Digimon to evolve in a battle gets +100 to every stat for the fight and one protected enemy turn).
+with the audio muted. The experience rules (the whole party sharing a battle's experience, form experience 14x) are
+the Definitive Edition's own, with nothing to set.
 
 | main row | what it holds |
 |---|---|
-| `GAME` | `FAST-FORWARD` (speed and off/on), `SKIP DIALOGUES`, `SKIP BATTLE ANIMS` and `HIT REACTION`, `SAVE ANYWHERE`, `EVO BUFF` (on by default) |
-| `XP` | `PARTY XP` (percentage of the party that shares), `XP / BITS BOOST` (off, or 2x to 20x, default 2x), `FORM XP` (1x to 20x, default 14x: the digivolutions' multiplier alone), `ALL FORMS' XP` (on by default) |
+| `GAME` | `FAST-FORWARD` (speed and off/on), `SKIP DIALOGUES`, `SKIP BATTLE ANIMS` and `HIT REACTION`, `SAVE ANYWHERE`, `BATTLE MENU` (its buttons, `REMEMBER CURSOR`, `BUFFER INPUT`) |
 | `VIDEO` | `HZ` (50 or 60), `RENDERER` (`GLES` for 3D, `SOFTWARE` for 2D-heavy scenes and the byte-exact reference) |
 | `DEBUG` | `LOGS` (off / soft / heavy, off by default), `SAVE LOGS` (a `dw3-logs-<date>.zip` beside the port: the logs, the crash reports, the settings and the pad map) and `CLEAN LOGS`, after asking, which deletes those files and the old zips |
 | `LED BAR` | the console's LED bar follows the acting Digimon's HP in battle (installs a small daemon) |
@@ -55,11 +54,11 @@ with the audio muted, the whole party sharing all the experience, XP boost 2x, f
 | `RESET SETTINGS` | after asking, puts everything back: the tuned settings, the pad map (modern layout) and the LED bar switched on. The memory cards are never touched |
 | `PLAY` | start the game |
 
-The XP boost removes a brake the game has: form experience is capped at 10 points a battle before the fifth form-level
-threshold and 50 after it, which is why a digivolution gains one level per battle, and the cap is applied before any
-multiplier. With the boost on the cap is skipped, so a won battle can raise several form levels. `ALL FORMS' XP` credits
-the three chosen forms of each party member, not a form left in the lab. Each form keeps its own requirement table. The
-mod's full behaviour is in [the mod reference](https://github.com/al4xdev/dw3/blob/main/docs/LAUNCHER.md).
+Form experience is 14x and the game's own brake on it (10 points a battle before the fifth form-level threshold, 50
+after, which is why a digivolution gains one level per battle) is skipped, so a won battle can raise several form
+levels. The three chosen forms of each party member earn it, not a form left in the lab. These are the Definitive
+Edition's rules, with nothing to set ([`docs/MECHANICS.md`](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/MECHANICS.md)
+section 6).
 
 ## Controls (default PS1 layout)
 
@@ -97,7 +96,7 @@ the device, the CFW and its version, and the resolution. Two facts make a report
 - the frame-rate line the game writes at exit: `port: window: N frames presented in X s (Y per second)` in
   `ports/dw3/logs/game.log` (this needs `LOGS` set to soft or heavy in the DEBUG group);
 - whether the **films** show a rectangle of wrong pixels in the top-right corner. That is the one known rendering defect
-  (see [the notes](https://github.com/al4xdev/dw3/blob/main/docs/gpu/17-movie-artefact.md)); knowing which devices and
+  (see [the notes](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/gpu/17-movie-artefact.md)); knowing which devices and
   drivers show it is worth more than a fix nobody can test.
 
 ## Known issues
@@ -118,7 +117,7 @@ the device, the CFW and its version, and the resolution. Two facts make a report
 The port is built with the repository's ARM cross build (Docker with an armhf toolchain) and packed by a second script:
 
 ```
-git clone https://github.com/al4xdev/dw3 --recurse-submodules
+git clone https://github.com/al4xdev/digimon-world-3-definitive-edition --recurse-submodules
 cd dw3
 tools/build_arm.sh               # builds build/armhf-sdl2/dw2003 (-DPSXSTACK_SDL2=ON -DPSXSTACK_EGL=ON)
 portmaster/make_release.sh       # checks the binary and writes dist/dw3.zip
@@ -130,7 +129,7 @@ portmaster/make_release.sh       # checks the binary and writes dist/dw3.zip
 |---|---|
 | [gascarcella/dw2003recomp](https://github.com/gascarcella/dw2003recomp) | the decompilation of the game's own C and the PC port; the base this repository forks |
 | [gascarcella/psxstack](https://github.com/gascarcella/psxstack) (fork used here: [al4xdev/dw3-psxstack](https://github.com/al4xdev/dw3-psxstack)) | the host runtime: arena, overlays, video, SPU, audio, input, memory cards, settings, the mods engine, the GPU backend, the crash report and the measurement switches |
-| [stenzek/duckstation](https://github.com/stenzek/duckstation) | studied, not linked: the VRAM-as-a-texture design, the batch key that became per-vertex state here, and the framebuffer-fetch strategy for the mask bit and semi-transparency. The notes in [`docs/gpu`](https://github.com/al4xdev/dw3/tree/main/docs/gpu) record what was kept and what was rejected; the implementation is this project's own |
+| [stenzek/duckstation](https://github.com/stenzek/duckstation) | studied, not linked: the VRAM-as-a-texture design, the batch key that became per-vertex state here, and the framebuffer-fetch strategy for the mask bit and semi-transparency. The notes in [`docs/gpu`](https://github.com/al4xdev/digimon-world-3-definitive-edition/tree/main/docs/gpu) record what was kept and what was rejected; the implementation is this project's own |
 | [psx-spx](https://psx-spx.consoledev.net/) | the hardware reference: the SPU's voices, envelopes and reverb, the GPU's commands, the GTE's arithmetic |
 | PCSX-Redux | the oracle for the tests (SPU traces, replay runners), never a source of code |
 | [SDL2](https://github.com/libsdl-org/SDL) | the window, the gamepad, the audio device and the threads on the host |
