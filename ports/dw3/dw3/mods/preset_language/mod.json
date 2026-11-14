@@ -10,10 +10,10 @@
     { "id": "language", "name": "Language", "description": "The game's text language. Takes effect at the next start.",
       "type": "enum", "default": "english", "applies": "restart",
       "values": [
-        { "id": "english", "label": "English" }, { "id": "french", "label": "French" },
-        { "id": "german", "label": "German" }, { "id": "italian", "label": "Italian" },
-        { "id": "spanish", "label": "Spanish" }, { "id": "usa", "label": "English (USA)" },
-        { "id": "japanese", "label": "Japanese" }
+        { "id": "english", "label": "English" }, { "id": "portuguese", "label": "Portuguese (BR)" },
+        { "id": "french", "label": "French" }, { "id": "german", "label": "German" },
+        { "id": "italian", "label": "Italian" }, { "id": "spanish", "label": "Spanish" },
+        { "id": "usa", "label": "English (USA)" }, { "id": "japanese", "label": "Japanese" }
       ] }
   ]
 }
