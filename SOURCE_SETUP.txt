@@ -1,5 +1,5 @@
 # Place Release Organisation / Username, for example: "PortsMaster"
-RELEASE_ORG="PortsMaster-MV"
+RELEASE_ORG="al4xdev"
 
 # Place Repository here, for example: "PortMaster-Source"
 RELEASE_REPO="PortMaster-MV-New"
