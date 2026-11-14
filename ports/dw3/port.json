@@ -33,7 +33,8 @@
         "availability": "full",
         "reqs": [],
         "arch": [
-            "armhf"
+            "armhf",
+            "aarch64"
         ],
         "min_glibc": ""
     }

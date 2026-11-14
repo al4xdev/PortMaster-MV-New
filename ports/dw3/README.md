@@ -82,13 +82,21 @@ The button labels can be switched between classic PS1 symbols and Modern (A/B/X/
 | device / CFW | state |
 |---|---|
 | XF35H (RK3326, Mali-G31, 640x480), EmuELEC 4.7-Nexus | **tested**: everything in this port was measured here |
-| R36S and its clones (same SoC) | **not tested**, but the port was built against exactly that hardware (Cortex-A35, Mali-G31, 640x480, armhf) |
-| AmberELEC | **not tested** |
-| dArkOS / ArkOS | **not tested** |
-| muOS | **not tested** |
-| ROCKNIX (Libmali and Panfrost) | **not tested** |
-| Knulli | **not tested** |
-| Other resolutions (480x320, 720x720, 1024x768) | **not tested**: the present is written for a 640x480 panel and letterboxes what does not fit |
+| R36S and its clones (same SoC) | **not tested** on hardware (built against Cortex-A35, Mali-G31, 640x480, armhf + aarch64) |
+| AmberELEC | **not tested** on hardware |
+| dArkOS / ArkOS (including 64-bit-only builds) | **not tested** on hardware |
+| muOS | **not tested** on hardware |
+| ROCKNIX (Libmali and Panfrost) | **not tested** on hardware |
+| Knulli (including TrimUI 64-bit) | **not tested** on hardware |
+| TrimUI Stock / CrossMix (`aarch64`) | **not tested** on hardware |
+| Other resolutions (480x320, 720x720, 1024x768, 1280x720) | **not tested** on hardware — **synthetically simulated** (`dw3-launcher` scales/centers across 480x320..1920x1080; `dw2003` integer-scales 2x/3x on `fbdev` or logical-scales on SDL2) |
+
+> **Note (synthetic testing):** All `not tested` CFWs above (EmuELEC, R36S/clones, AmberELEC, ArkOS/dArkOS, muOS, ROCKNIX, Knulli, TrimUI Stock/CrossMix) were **synthetically tested** via source-code audits of PortMaster and each CFW's boot/SDL/GPU/audio scripts plus Docker + `qemu-arm` / `qemu-aarch64` + `Xvfb` simulations against the real `SLES-03936` disc and unpacked `dist/dw3.zip`, rather than direct playtests on physical hardware. Variations verified synthetically:
+> - **Architectures & loaders (`armhf` + `aarch64`)**: native `aarch64` selection (`PORT_32BIT=N`), native `armv7l` `armhf` selection (`PORT_32BIT=Y`), hybrid 64-bit kernel (`uname -m = aarch64`) with 32-bit-only `armhf` userspace (missing `ld-linux-aarch64.so.1` automatic fallback to `armhf`), `DW3_FORCE_ARCH=armhf` override, `DEVICE_HAS_ARMHF=N` error guard, and `dw3-launcher.<arch>` standalone game binary auto-detection (`find_game_bin`).
+> - **ABI & GPU/display fallbacks**: `glibc 2.28` floor on Debian 10 `buster` (covering ArkOS/EmuELEC `2.30` and TrimUI `2.33` through ROCKNIX `2.40`), `dlopen`-only GLES/EGL/GBM initialization without `libgbm.so.1` or `libEGL.so.1` (falling back cleanly to `--renderer software` on fbdev-only Mali and PowerVR devices), `WAYLAND_DISPLAY` SDL2 path (ROCKNIX Sway), `$ESUDO env` preservation (ArkOS/dArkOS), `muOS` static `PORT_32BIT="Y"` grep safety + `SDL_GAMECONTROLLERCONFIG` preservation, and BusyBox `/bin/sh` (`dash`) re-exec to `bash` (TrimUI/CrossMix).
+> - **Resolutions & initial-screen captures**: `480x320`, `640x480`, `720x720`, `1024x768`, and `1280x720`, with pixel-identical initial-screen captures of `dw3-launcher` (`640x480`) and `dw2003` (`SELECT LANGUAGE` / `STDWTITL` intro) across both `armhf` and `aarch64`.
+>
+> Physical hardware confirmation from testers is still needed before marking any CFW row as tested.
 
 **If you run it on another device, please report what you see**, in the port's thread on the PortMaster Discord, with
 the device, the CFW and its version, and the resolution. Two facts make a report useful:
