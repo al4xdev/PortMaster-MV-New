@@ -2,7 +2,7 @@
 """ledd: the one process allowed to write the handheld's LED bar.
 
 Started by the game's led_bar mod (port/game/led.c) from the package's directory, and installed there by the handheld
-menu (handheld/dw3-menu.py). The palette and the measurements behind it are docs/XF35H.md, "The LED bar is on a
+launcher (launcher/cfg.c). The palette and the measurements behind it are docs/XF35H.md, "The LED bar is on a
 UART, not in sysfs"; the prototype it grew from, with every experiment that produced it, is .dumps/led-test/.
 
 Why a daemon at all: the bar is an MCU on /dev/ttyS2, and what makes a change

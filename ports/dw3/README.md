@@ -1,14 +1,16 @@
 ## Installing it (no tools needed)
 
-1. Install the port with **PortMaster** on the console (Ports → PortMaster → search for "Digimon World 2003"), or unzip
-   `dw3.zip` into the card's `ports/` folder by hand. On EmuELEC that folder is `/storage/roms/ports/`.
+1. The port is in its **testing phase** on the PortMaster Discord and is not in the PortMaster catalogue yet: unzip
+   the testing thread's `dw3.zip` into the card's `ports/` folder by hand. On EmuELEC that folder is
+   `/storage/roms/ports/`. Once it is published, PortMaster on the console installs it too (Ports → PortMaster →
+   search for "Digimon World 2003").
 2. Put your own disc in `ports/dw3/game/`: the **`.cue` and the `.bin`**, from your own copy of the game (Europe / PAL,
    disc 1, serial `SLES-03936`). The launcher looks for the common names (`dw3`, `dw2003`, `Digimon World 2003`,
    `Digimon World 3`) and otherwise takes the first `.cue` or `.bin` it finds in `game/`. If you rename the `.bin`, edit
    the `.cue` to match. Copy the files the way you copy any ROM: card in the PC, or over the network. The `.bin` is
    about 660 MB.
-3. Launch it from the **Ports** menu. A gamepad menu comes first (the port's own, driven only by the pad): the bottom
-   row is **PLAY**. Settings, button remapping and the LED bar are the rows above it.
+3. Launch it from the **Ports** menu. A gamepad menu comes first (the port's own, driven only by the pad): the top
+   row is **PLAY**. Settings, button remapping, saves and the LED bar are the rows below it.
 
 The port contains no game data. Without a disc in `game/` the launcher shows "Please copy your Digimon World 2003
 .bin/.cue into ports/dw3/game/" and exits.
@@ -24,14 +26,15 @@ reimplemented on the host. The disc is the only source of game data; nothing of 
 
 Two renderers ship in the binary: the software rasteriser (byte-identical to the port's reference) and a GLES one that
 draws the PlayStation's VRAM on the Mali. `ports/dw3/settings.json` picks one (`"video": { "renderer": "gles" }` or
-`"software"`), and so does the `RENDERER` row of the menu. GLES is faster in 3D, software is faster in menus.
+`"software"`); the menu has no renderer row on a handheld, so edit that file to switch. GLES is faster in 3D, software
+is faster in menus.
 
 How the launcher chooses:
 
-- With no writable `/dev/fb0`, or with Wayland as the display (ROCKNIX on some devices), the framebuffer menu is skipped
-  and the game starts with `settings.json` as it is.
-- The launcher passes `--renderer gles` only when the CPU part is `0xd04` (Cortex-A35, the RK3326) and there is no
-  `settings.json` yet. Everywhere else the default is software.
+- With no writable `/dev/fb0`, or with Wayland as the display (ROCKNIX on some devices), the menu draws through SDL2
+  instead of the framebuffer. If it finds no screen at all, the game starts with `settings.json` as it is.
+- The default renderer is `gles` only when the CPU part is `0xd04` (Cortex-A35, the RK3326); the menu writes it into
+  `settings.json` when the file has no renderer yet. Everywhere else the default is software.
 - `DW3_FORCE_VIDEO` (`fbdev` or `sdl2`) and `DW3_FORCE_RENDERER` (`gles` or `software`) override both choices.
 
 More: [running, deploying and limits](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/HANDHELD.md).
@@ -39,43 +42,46 @@ More: [running, deploying and limits](https://github.com/al4xdev/digimon-world-3
 ## What the menu offers
 
 The menu runs before the game, is driven by the pad alone and writes `ports/dw3/settings.json` as you change it.
-`Cross` enters a group or changes a value, `Circle` goes back, `Start` plays from anywhere, `Select + Start` quits. The
+The bottom face button (A) enters a group or changes a value, the right-hand one (B) goes back, `Start` plays from the
+main rows and the settings screens (on `BATTLE HUD` and `CONTROLS` it rebinds the row), `Select + Start` quits. The
 defaults are the setup the port was tuned with, so a player who never opens the menu gets it anyway: 8x fast-forward
-with the audio muted. The experience rules (the whole party sharing a battle's experience, form experience 14x) are
-the Definitive Edition's own, with nothing to set.
+with the audio muted, faster loading at 4x, battle text skipped. The experience rules (the whole party sharing a
+battle's experience, form experience 14x) are the Definitive Edition's own, with nothing to set.
 
 | main row | what it holds |
 |---|---|
-| `GAME` | `FAST-FORWARD` (speed and off/on), `SKIP DIALOGUES`, `SKIP BATTLE ANIMS` and `HIT REACTION`, `SAVE ANYWHERE`, `BATTLE MENU` (its buttons, `REMEMBER CURSOR`, `BUFFER INPUT`) |
-| `VIDEO` | `HZ` (50 or 60), `RENDERER` (`GLES` for 3D, `SOFTWARE` for 2D-heavy scenes and the byte-exact reference) |
-| `DEBUG` | `LOGS` (off / soft / heavy, off by default), `SAVE LOGS` (a `dw3-logs-<date>.zip` beside the port: the logs, the crash reports, the settings and the pad map) and `CLEAN LOGS`, after asking, which deletes those files and the old zips |
-| `LED BAR` | the console's LED bar follows the acting Digimon's HP in battle (installs a small daemon) |
-| `BUTTONS` | remap the pad: `LAYOUT` (`PS1` symbols or `MODERN` A/B/X/Y), `BATTLE MENU` (direct-button Persona-style HUD bindings for Fight, Tech, DV, Items, Tag, Run), and per-action button remapping |
-| `RESET SETTINGS` | after asking, puts everything back: the tuned settings, the pad map (modern layout) and the LED bar switched on. The memory cards are never touched |
 | `PLAY` | start the game |
+| `GAME` | `LANGUAGE`, `FAST-FORWARD` (off or a speed), `FAST LOAD`, `SKIP DIALOGUES`, `SKIP BATTLE ANIMS` and `HIT REACTION`, `BATTLE TEXT` (off / skip / async) |
+| `BATTLE HUD` | where each battle action sits on the pad (Fight, Tech, Digivolve, Tag, Item, Run, Inspect, Blast), `REMEMBER CURSOR`, `BUFFER INPUT` |
+| `CONTROLS` | `BUTTON GLYPHS` (`PS1`, `XBOX`, `NINTENDO`, `CUSTOM`) and per-action button remapping |
+| `SAVES & CLOUD` | `CLOUD SYNC`, `SYNC INTERVAL`, `LOCAL BACKUPS` (how many copies of the card to keep, 1-100), `SYNC NOW`, `RESTORE BACKUP`, `CLOUD ACCOUNT` |
+| `LED BAR` | the console's LED bar follows the acting Digimon's HP in battle (installs a small daemon) |
+| `DEBUG` | `LOGS` (off / soft / heavy, off by default), `SAVE LOGS` (a `dw3-logs-<date>.zip` beside the port: the logs, the crash reports, the settings and the pad map) and `CLEAN LOGS`, after asking, which deletes those files and the old zips |
+| `RESET SETTINGS` | after asking, puts everything back: the tuned settings, the pad map (Xbox glyphs) and the LED bar switched on. The memory cards are never touched |
 
 Form experience is 14x and the game's own brake on it (10 points a battle before the fifth form-level threshold, 50
 after, which is why a digivolution gains one level per battle) is skipped, so a won battle can raise several form
 levels. The three chosen forms of each party member earn it, not a form left in the lab. These are the Definitive
-Edition's rules, with nothing to set ([`docs/MECHANICS.md`](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/MECHANICS.md)
+Edition's rules, with nothing to set ([progression](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/definitive-edition/progression.md),
+[`docs/MECHANICS.md`](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/MECHANICS.md)
 section 6).
 
-## Controls (default PS1 layout)
+## Controls (default layout)
 
-| Button | PS1 action |
+| Button | In the game |
 |--|--|
 | D-Pad | Move / menu |
-| South | Cross (✕) |
-| East | Circle (◯) |
-| North | Square (▢) |
-| West | Triangle (△) |
+| Bottom (A) | Confirm, talk |
+| Right (B) | Back, cancel |
+| Top (Y), left (X) | the other two face buttons |
 | L1 / R1 | L1 / R1 |
-| L2 / R2 | L2 / R2 |
-| Start | Start |
+| L2 / R2 | L2 / R2 (Inspect / Blast in battle) |
+| Start | Start (field menu) |
 | Select + Start | Quit |
 
-Everything can be rebound in the menu (`BUTTONS` → `REMAP`); it writes the mapping into `settings.json` and `pad.map`.
-The button labels can be switched between classic PS1 symbols and Modern (A/B/X/Y). `Select + Start` quits from anywhere.
+Everything can be rebound in the menu (`CONTROLS`); it writes the mapping into `settings.json` and `pad.map`. The
+button labels (`BUTTON GLYPHS`) can be switched between PS1 symbols, Xbox (A/B/X/Y, the default) and Nintendo letters.
+The battle actions are placed on the `BATTLE HUD` screen. `Select + Start` quits from anywhere.
 
 ## Tested on
 
@@ -112,7 +118,8 @@ the device, the CFW and its version, and the resolution. Two facts make a report
 - **Movie artefact on the GLES renderer:** a rectangle of wrong pixels in the top-right corner of the films. Cosmetic,
   films only, absent on the software renderer.
 - **The renderer is a trade-off:** GLES wins where a frame has 3D (41.9 against 37.7 fps in the same battle); a light 2D
-  frame pays the same ~3.2 ms present either way. Switch with the `RENDERER` row.
+  frame pays the same ~3.2 ms present either way. Switch with `video.renderer` in `ports/dw3/settings.json` (`gles` or
+  `software`) or `DW3_FORCE_RENDERER`.
 - **The heaviest battles are over budget:** about 24 ms against 20 ms with GLES.
 - **GLES VRAM differs from the software renderer in 0.2-0.7% of its texels** (edges, 5-bit rounding). The picture is
   byte-identical at the frames compared with `--screenshot`.
@@ -122,12 +129,13 @@ the device, the CFW and its version, and the resolution. Two facts make a report
 
 ## Compile
 
-The port is built with the repository's ARM cross build (Docker with an armhf toolchain) and packed by a second script:
+The port is built with the repository's ARM cross build (Docker with armhf and aarch64 toolchains) and packed by a
+second script:
 
 ```
 git clone https://github.com/al4xdev/digimon-world-3-definitive-edition --recurse-submodules
-cd dw3
-tools/build_arm.sh               # builds build/armhf-sdl2/dw2003 (-DPSXSTACK_SDL2=ON -DPSXSTACK_EGL=ON)
+cd digimon-world-3-definitive-edition
+tools/build_arm.sh               # dw2003 and dw3-launcher in build/{armhf,aarch64}-sdl2/ (-DPSXSTACK_SDL2=ON -DPSXSTACK_EGL=ON)
 portmaster/make_release.sh       # checks the binary and writes dist/dw3.zip
 ```
 
