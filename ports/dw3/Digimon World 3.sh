@@ -198,6 +198,10 @@ if [ "$cpu_part" = "0xd04" ]; then
 else
   echo "renderer: software (CPU part ${cpu_part:-unknown})"
 fi
+# What a report needs to place the device: the CFW, the model, the screen and the video path chosen.
+echo "device: ${CFW_NAME:-unknown CFW}, $(tr -d '\0' < /proc/device-tree/model 2>/dev/null || echo 'model unknown'), kernel $(uname -r 2>/dev/null)"
+echo "video: DW3_VIDEO=$DW3_VIDEO (fb0 usable=$fb, WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-none}, SDL_VIDEODRIVER=${SDL_VIDEODRIVER:-unset}), screen ${DISPLAY_WIDTH:-?}x${DISPLAY_HEIGHT:-?}"
+echo "disc: $DISC"
 
 # pm_finish clears the TTY. It does not clear pixels written directly to /dev/fb0.
 blank_fb() {
@@ -272,16 +276,20 @@ elif [ "${DW3_DEFAULT_RENDERER:-}" = "gles" ] && [ ! -f ./settings.json ]; then
 fi
 
 game_rc=3
+# The first start checks the disc image, which takes a while on a slow card: say so before the menu draws.
+if command -v pm_message >/dev/null 2>&1; then
+  pm_message "Digimon World 3: starting. The first start checks your disc, it can take a minute." || true
+fi
 if [ "${DW3_SKIP_MENU:-0}" != "1" ] && [ -x "./$LAUNCHER" ]; then
-  echo "menu: $LAUNCHER ($DW3_VIDEO)" > ./menu.log
+  echo "menu: $LAUNCHER ($DW3_VIDEO)"
   launcher_flag="--fb"
   [ "$DW3_VIDEO" = "sdl2" ] && launcher_flag="--sdl"
   pm_platform_helper "$GAMEDIR/$LAUNCHER"
   pm_platform_helper "$GAMEDIR/$BINARY"
-  run_with_env "./$LAUNCHER" "$launcher_flag" >> ./menu.log 2>&1
+  run_with_env "./$LAUNCHER" "$launcher_flag"
   game_rc=$?
 else
-  echo "menu skipped" >> ./menu.log
+  echo "menu skipped"
   pm_platform_helper "$GAMEDIR/$BINARY"
 fi
 
