@@ -135,8 +135,8 @@ second script:
 ```
 git clone https://github.com/al4xdev/digimon-world-3-definitive-edition --recurse-submodules
 cd digimon-world-3-definitive-edition
-tools/build_arm.sh               # dw2003 and dw3-launcher in build/{armhf,aarch64}-sdl2/ (-DPSXSTACK_SDL2=ON -DPSXSTACK_EGL=ON)
-portmaster/make_release.sh       # checks the binary and writes dist/dw3.zip
+.ci-cd/portmaster/build_arm.sh               # dw2003 and dw3-launcher in build/{armhf,aarch64}-sdl2/ (-DPSXSTACK_SDL2=ON -DPSXSTACK_EGL=ON)
+.ci-cd/portmaster/make_release.sh       # checks the binary and writes dist/dw3.zip
 ```
 
 ## Thanks and credits
