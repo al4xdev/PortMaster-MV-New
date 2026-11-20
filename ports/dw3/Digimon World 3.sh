@@ -276,10 +276,9 @@ elif [ "${DW3_DEFAULT_RENDERER:-}" = "gles" ] && [ ! -f ./settings.json ]; then
 fi
 
 game_rc=3
-# The first start checks the disc image, which takes a while on a slow card: say so before the menu draws.
-if command -v pm_message >/dev/null 2>&1; then
-  pm_message "Digimon World 3: starting. The first start checks your disc, it can take a minute." || true
-fi
+# No pm_message here. On newer PortMaster it starts portmsg in the background, and pm_platform_helper kills it
+# and waits for it to exit. On muOS (H700) the screen stayed on that message for 40 minutes, and the menu never
+# showed. The menu draws within a second anyway, so the message gained nothing.
 if [ "${DW3_SKIP_MENU:-0}" != "1" ] && [ -x "./$LAUNCHER" ]; then
   echo "menu: $LAUNCHER ($DW3_VIDEO)"
   launcher_flag="--fb"
