@@ -77,11 +77,13 @@ section 6).
 | L1 / R1 | L1 / R1 |
 | L2 / R2 | L2 / R2 (Inspect / Blast in battle) |
 | Start | Start (field menu) |
+| Select + R1 | Fast-forward on and off (at the speed set in `GAME`; Select first: R1 alone pages the game's menus) |
 | Select + Start | Quit |
 
 Everything can be rebound in the menu (`CONTROLS`); it writes the mapping into `settings.json` and `pad.map`. The
 button labels (`BUTTON GLYPHS`) can be switched between PS1 symbols, Xbox (A/B/X/Y, the default) and Nintendo letters.
-The battle actions are placed on the `BATTLE HUD` screen. `Select + Start` quits from anywhere.
+The battle actions are placed on the `BATTLE HUD` screen. `Select + Start` quits from anywhere. The fast-forward chord
+follows the buttons chosen for SELECT and R1, and the `FAST-FORWARD` row shows it.
 
 ## Tested on
 

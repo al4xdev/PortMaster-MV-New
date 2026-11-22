@@ -5,4 +5,4 @@ The port's: dw2003 (the game), dw3-launcher (the menu), ledd.py, probe.sh, licen
 
 Logs: logs/game.log is the game's run (empty with DEBUG > LOGS off), log.txt is the script's and the menu's: the device, the video path, the disc found and everything the menu printed.
 DW3_FORCE_VIDEO (fbdev or sdl2) and DW3_FORCE_RENDERER (gles or software) override the launcher's choice.
-Select + Start quits.
+Select + R1 turns fast-forward on and off. Select + Start quits.
