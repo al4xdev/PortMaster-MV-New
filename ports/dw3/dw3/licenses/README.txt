@@ -5,6 +5,7 @@ What this port ships, and what each licence here covers.
   ledd.py                     dw2003recomp decompilation). LICENSE - MIT.
                               It contains no game data: it reads the player's own disc.
                               dw3-launcher embeds stb_truetype (public domain / MIT) and Liberation Sans (SIL OFL 1.1).
+                              dw2003 embeds cJSON (MIT; cJSON.txt).
 
   SDL2.txt                    SDL2, linked from the device's firmware (or from PortMaster's own copy when
                               the firmware has none). zlib licence.
