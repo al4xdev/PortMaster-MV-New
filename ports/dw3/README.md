@@ -39,6 +39,13 @@ How the launcher chooses:
 
 More: [running, deploying and limits](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/HANDHELD.md).
 
+## Your own battle music
+
+Drop standard MIDI files (`.mid` or `.midi`) in `ports/dw3/midi/` (the folder is made the first time you open the list), then
+talk to Etemon at the piano in the Velvet Room and choose one: the random battles play it. His list also offers "All, shuffled" and "All, in order" over the whole folder. The first row is the
+game's own music, which is also what plays when a chosen file is gone. Long pieces are cut to what the game's sound bank holds
+(about 31 KB of sequence, a few minutes).
+
 ## What the menu offers
 
 The menu runs before the game, is driven by the pad alone and writes `ports/dw3/settings.json` as you change it.

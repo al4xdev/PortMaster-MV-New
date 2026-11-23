@@ -8,7 +8,7 @@
   "description": "The battle's command menu (Fight, Tech, Digivolve, Tag, Item, Run) without the list and its cursor: each action has its own button and is drawn where that button is on the pad. The buttons are chosen by their place on your pad, so the menu follows your button mapping and shows your own button names. The submenus (techniques, items, Digivolve, Tag) are unchanged.",
   "options": [
     { "id": "fight", "name": "Fight", "description": "The button for Fight.",
-      "type": "enum", "default": "east", "applies": "live",
+      "type": "enum", "default": "south", "applies": "live",
       "values": [
         { "id": "south", "label": "Bottom button" }, { "id": "west", "label": "Left button" },
         { "id": "north", "label": "Top button" }, { "id": "east", "label": "Right button" },
@@ -32,7 +32,7 @@
         { "id": "l2", "label": "L2" }, { "id": "r2", "label": "R2" }
       ] },
     { "id": "tag", "name": "Tag", "description": "The button for Tag (switching the member).",
-      "type": "enum", "default": "south", "applies": "live",
+      "type": "enum", "default": "east", "applies": "live",
       "values": [
         { "id": "south", "label": "Bottom button" }, { "id": "west", "label": "Left button" },
         { "id": "north", "label": "Top button" }, { "id": "east", "label": "Right button" },
