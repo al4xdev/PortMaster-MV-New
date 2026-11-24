@@ -63,7 +63,7 @@ battle's experience, form experience 14x) are the Definitive Edition's own, with
 | `CONTROLS` | `BUTTON GLYPHS` (`PS1`, `XBOX`, `NINTENDO`, `CUSTOM`) and per-action button remapping |
 | `SAVES & CLOUD` | `CLOUD SYNC`, `SYNC INTERVAL`, `LOCAL BACKUPS` (how many copies of the card to keep, 1-100), `SYNC NOW`, `RESTORE BACKUP`, `CLOUD ACCOUNT` |
 | `LED BAR` | the console's LED bar follows the acting Digimon's HP in battle (installs a small daemon) |
-| `DEBUG` | `LOGS` (off / soft / heavy, off by default), `SAVE LOGS` (a `dw3-logs-<date>.zip` beside the port: the logs, the crash reports, the settings and the pad map) and `CLEAN LOGS`, after asking, which deletes those files and the old zips |
+| `DEBUG` | `LOGS` (off / soft / heavy, off by default), `SEND LOGS` (saves a `dw3-logs-<date>.zip` beside the port: the logs, the crash reports, the settings, the pad map and your memory card, then uploads them to the developer and shows a report code to put in the GitHub bug report; see [`CONTRIBUTING.md`](../../docs/CONTRIBUTING.md) "Reporting issues") and `CLEAN LOGS`, after asking, which deletes those files and the old zips |
 | `RESET SETTINGS` | after asking, puts everything back: the tuned settings, the pad map (Xbox glyphs) and the LED bar switched on. The memory cards are never touched |
 
 Form experience is 14x and the game's own brake on it (10 points a battle before the fifth form-level threshold, 50
@@ -113,7 +113,7 @@ follows the buttons chosen for SELECT and R1, and the `FAST-FORWARD` row shows i
 >
 > Physical hardware confirmation from testers is still needed before marking any CFW row as tested.
 
-**If you run it on another device, please report what you see**, in the port's thread on the PortMaster Discord, with
+**If you run it on another device, please report what you see**: DEBUG > SEND LOGS (with a network) and open a [bug report](https://github.com/al4xdev/digimon-world-3-definitive-edition/issues/new?template=bug_report.yml) with the code it shows, or post in the port's thread on the PortMaster Discord, with
 the device, the CFW and its version, and the resolution. Two facts make a report useful:
 
 - the frame-rate line the game writes at exit: `port: window: N frames presented in X s (Y per second)` in
