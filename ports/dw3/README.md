@@ -21,7 +21,7 @@ the next launch.
 ## Notes
 
 A source port of **Digimon World 2003** (PAL), built from the [dw2003recomp](https://github.com/gascarcella/dw2003recomp)
-decompilation: the game's own C, compiled for 32-bit ARM, with the PlayStation's hardware (CPU, GTE, GPU, SPU, MDEC, CD)
+decompilation: the game's own C, compiled for 32-bit and 64-bit ARM, with the PlayStation's hardware (CPU, GTE, GPU, SPU, MDEC, CD)
 reimplemented on the host. The disc is the only source of game data; nothing of the game is included here.
 
 Two renderers ship in the binary: the software rasteriser (byte-identical to the port's reference) and a GLES one that
@@ -52,15 +52,15 @@ The menu runs before the game, is driven by the pad alone and writes `ports/dw3/
 The bottom face button (A) enters a group or changes a value, the right-hand one (B) goes back, `Start` plays from the
 main rows and the settings screens (on `BATTLE HUD` and `CONTROLS` it rebinds the row), `Select + Start` quits. The
 defaults are the setup the port was tuned with, so a player who never opens the menu gets it anyway: 8x fast-forward
-with the audio muted, faster loading at 4x, battle text skipped. The experience rules (the whole party sharing a
+with the audio muted, faster loading at 8x, battle text skipped. The experience rules (the whole party sharing a
 battle's experience, form experience 14x) are the Definitive Edition's own, with nothing to set.
 
 | main row | what it holds |
 |---|---|
 | `PLAY` | start the game |
-| `GAME` | `LANGUAGE`, `FAST-FORWARD` (off or a speed), `FAST LOAD`, `SKIP DIALOGUES`, `SKIP BATTLE ANIMS` and `HIT REACTION`, `BATTLE TEXT` (off / skip / async) |
+| `GAME` | `LANGUAGE`, `FAST-FORWARD` (off or a speed), `FAST LOAD`, `SKIP DIALOGUES`, `SKIP BATTLE ANIMS` and `HIT REACTION` |
 | `BATTLE HUD` | where each battle action sits on the pad (Fight, Tech, Digivolve, Tag, Item, Run, Inspect, Blast), `REMEMBER CURSOR`, `BUFFER INPUT` |
-| `CONTROLS` | `BUTTON GLYPHS` (`PS1`, `XBOX`, `NINTENDO`, `CUSTOM`) and per-action button remapping |
+| `CONTROLS` | `BUTTON GLYPHS` (`PS1`, `XBOX`, `NINTENDO`) and per-action button remapping |
 | `SAVES & CLOUD` | `CLOUD SYNC`, `SYNC INTERVAL`, `LOCAL BACKUPS` (how many copies of the card to keep, 1-100), `SYNC NOW`, `RESTORE BACKUP`, `CLOUD ACCOUNT` |
 | `LED BAR` | the console's LED bar follows the acting Digimon's HP in battle (installs a small daemon) |
 | `DEBUG` | `LOGS` (off / soft / heavy, off by default), `SEND LOGS` (saves a `dw3-logs-<date>.zip` beside the port: the logs, the crash reports, the settings, the pad map and your memory card, then uploads them to the developer and shows a report code to put in the GitHub bug report; see [`CONTRIBUTING.md`](../../docs/CONTRIBUTING.md) "Reporting issues") and `CLEAN LOGS`, after asking, which deletes those files and the old zips |
@@ -106,20 +106,13 @@ follows the buttons chosen for SELECT and R1, and the `FAST-FORWARD` row shows i
 | TrimUI Stock / CrossMix (`aarch64`) | **not tested** on hardware |
 | Other resolutions (480x320, 720x720, 1024x768, 1280x720) | **not tested** on hardware — **synthetically simulated** (`dw3-launcher` scales/centers across 480x320..1920x1080; `dw2003` integer-scales 2x/3x on `fbdev` or logical-scales on SDL2) |
 
-> **Note (synthetic testing):** All `not tested` CFWs above (EmuELEC, R36S/clones, AmberELEC, ArkOS/dArkOS, muOS, ROCKNIX, Knulli, TrimUI Stock/CrossMix) were **synthetically tested** via source-code audits of PortMaster and each CFW's boot/SDL/GPU/audio scripts plus Docker + `qemu-arm` / `qemu-aarch64` + `Xvfb` simulations against the real `SLES-03936` disc and unpacked `dist/dw3.zip`, rather than direct playtests on physical hardware. Variations verified synthetically:
-> - **Architectures & loaders (`armhf` + `aarch64`)**: native `aarch64` selection (`PORT_32BIT=N`), native `armv7l` `armhf` selection (`PORT_32BIT=Y`), hybrid 64-bit kernel (`uname -m = aarch64`) with 32-bit-only `armhf` userspace (missing `ld-linux-aarch64.so.1` automatic fallback to `armhf`), `DW3_FORCE_ARCH=armhf` override, `DEVICE_HAS_ARMHF=N` error guard, and `dw3-launcher.<arch>` standalone game binary auto-detection (`find_game_bin`).
-> - **ABI & GPU/display fallbacks**: `glibc 2.28` floor on Debian 10 `buster` (covering ArkOS/EmuELEC `2.30` and TrimUI `2.33` through ROCKNIX `2.40`), `dlopen`-only GLES/EGL/GBM initialization without `libgbm.so.1` or `libEGL.so.1` (falling back cleanly to `--renderer software` on fbdev-only Mali and PowerVR devices), `WAYLAND_DISPLAY` SDL2 path (ROCKNIX Sway), `$ESUDO env` preservation (ArkOS/dArkOS), `muOS` static `PORT_32BIT="Y"` grep safety + `SDL_GAMECONTROLLERCONFIG` preservation, and BusyBox `/bin/sh` (`dash`) re-exec to `bash` (TrimUI/CrossMix).
-> - **Resolutions & initial-screen captures**: `480x320`, `640x480`, `720x720`, `1024x768`, and `1280x720`, with pixel-identical initial-screen captures of `dw3-launcher` (`640x480`) and `dw2003` (`SELECT LANGUAGE` / `STDWTITL` intro) across both `armhf` and `aarch64`.
->
-> Physical hardware confirmation from testers is still needed before marking any CFW row as tested.
-
 **If you run it on another device, please report what you see**: DEBUG > SEND LOGS (with a network) and open a [bug report](https://github.com/al4xdev/digimon-world-3-definitive-edition/issues/new?template=bug_report.yml) with the code it shows, or post in the port's thread on the PortMaster Discord, with
 the device, the CFW and its version, and the resolution. Two facts make a report useful:
 
 - the frame-rate line the game writes at exit: `port: window: N frames presented in X s (Y per second)` in
   `ports/dw3/logs/game.log` (this needs `LOGS` set to soft or heavy in the DEBUG group);
 - whether the **films** show a rectangle of wrong pixels in the top-right corner. That is the one known rendering defect
-  (see [the notes](https://github.com/al4xdev/digimon-world-3-definitive-edition/blob/main/docs/gpu/17-movie-artefact.md)); knowing which devices and
+  (`--renderer gles`; no cause is known); knowing which devices and
   drivers show it is worth more than a fix nobody can test.
 
 ## Known issues
@@ -154,7 +147,7 @@ cd digimon-world-3-definitive-edition
 |---|---|
 | [gascarcella/dw2003recomp](https://github.com/gascarcella/dw2003recomp) | the decompilation of the game's own C and the PC port; the base this repository forks |
 | [gascarcella/psxstack](https://github.com/gascarcella/psxstack) (fork used here: [al4xdev/dw3-psxstack](https://github.com/al4xdev/dw3-psxstack)) | the host runtime: arena, overlays, video, SPU, audio, input, memory cards, settings, the mods engine, the GPU backend, the crash report and the measurement switches |
-| [stenzek/duckstation](https://github.com/stenzek/duckstation) | studied, not linked: the VRAM-as-a-texture design, the batch key that became per-vertex state here, and the framebuffer-fetch strategy for the mask bit and semi-transparency. The notes in [`docs/gpu`](https://github.com/al4xdev/digimon-world-3-definitive-edition/tree/main/docs/gpu) record what was kept and what was rejected; the implementation is this project's own |
+| [stenzek/duckstation](https://github.com/stenzek/duckstation) | studied, not linked: the VRAM-as-a-texture design, the batch key that became per-vertex state here, and the framebuffer-fetch strategy for the mask bit and semi-transparency. |
 | [psx-spx](https://psx-spx.consoledev.net/) | the hardware reference: the SPU's voices, envelopes and reverb, the GPU's commands, the GTE's arithmetic |
 | PCSX-Redux | the oracle for the tests (SPU traces, replay runners), never a source of code |
 | [SDL2](https://github.com/libsdl-org/SDL) | the window, the gamepad, the audio device and the threads on the host |

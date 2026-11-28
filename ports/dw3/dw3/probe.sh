@@ -45,11 +45,11 @@ mkdir -p "$LOG_DIR"
       if [ -S "$runtime/$WAYLAND_DISPLAY" ]; then
         echo "socket $runtime/$WAYLAND_DISPLAY: present"
       else
-        echo "socket $runtime/$WAYLAND_DISPLAY: absent (TODO: validate)"
+        echo "socket $runtime/$WAYLAND_DISPLAY: absent"
       fi
     fi
   else
-    echo "XDG_RUNTIME_DIR unset; wayland socket not resolved (TODO: validate)"
+    echo "XDG_RUNTIME_DIR unset; wayland socket not resolved"
   fi
   echo "--- audio ---"
   if command -v timeout >/dev/null 2>&1 && command -v pactl >/dev/null 2>&1; then
@@ -80,7 +80,7 @@ mkdir -p "$LOG_DIR"
   if [ ! -f "$BIN" ]; then
     echo "binary missing: $BIN"
   elif ! command -v ldd >/dev/null 2>&1; then
-    echo "ldd unavailable; library check skipped (TODO: validate)"
+    echo "ldd unavailable; library check skipped"
   else
     ldd "$BIN" 2>&1 || true
   fi
